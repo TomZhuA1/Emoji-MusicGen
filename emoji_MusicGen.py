@@ -12,7 +12,7 @@ import openai
 model = musicgen.MusicGen.get_pretrained('small', device='cpu')
 model.set_generation_params(duration=10)
 
-openai.api_key = "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"
+openai.api_key = "?"
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
@@ -147,11 +147,9 @@ def get_prompt(emoji):
   response = get_completion(prompt)
   return (subgenre, emotion, response)
 
-
-subgenre, emotion, prompt = get_prompt("😊")
-res_emolast = model.generate([f"""Genre: {subgenre}, {prompt} Emotion: {emotion}"""], progress=True)
-samplerate = 32000
-out_f = '😊_emolast.wav'
-torchaudio.save(out_f, res_emolast[0].to("cpu"), samplerate)
-
-print(get_prompt("😊"))
+if __name__ == "__main__":
+    subgenre, emotion, prompt = get_prompt("😊")
+    res_emolast = model.generate([f"""Genre: {subgenre}, {prompt} Emotion: {emotion}"""], progress=True)
+    samplerate = 32000
+    out_f = '😊_emolast.wav'
+    torchaudio.save(out_f, res_emolast[0].to("cpu"), samplerate)
