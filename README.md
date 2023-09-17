@@ -7,5 +7,6 @@ Use emoji to generate a piece of music
 
 ## install package
 !pip install -U git+https://github.com/facebookresearch/audiocraft
+
 !pip install openai
 
