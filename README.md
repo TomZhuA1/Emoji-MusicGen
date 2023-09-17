@@ -6,7 +6,6 @@ Use emoji to generate a piece of music
 !git clone https://github.com/TomZhuA1/Emoji-MusicGen.git
 
 ## install package
-
-
-## run
+!pip install -U git+https://github.com/facebookresearch/audiocraft
+!pip install openai
 
