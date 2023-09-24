@@ -147,9 +147,13 @@ def get_prompt(emoji):
   response = get_completion(prompt)
   return (subgenre, emotion, response)
 
-if __name__ == "__main__":
-    subgenre, emotion, prompt = get_prompt("😊")
-    res_emolast = model.generate([f"""Genre: {subgenre}, {prompt} Emotion: {emotion}"""], progress=True)
+def gen_and_save(emoji):
+    subgenre, emotion, prompt = get_prompt(emoji)
+    res = model.generate([f"""Genre: {subgenre}, {prompt} Emotion: {emotion}"""], progress=True)
     samplerate = 32000
-    out_f = '😊_emolast.wav'
+    out_f = emoji + '_emolast.wav'
     torchaudio.save(out_f, res_emolast[0].to("cpu"), samplerate)
+
+if __name__ == "__main__":
+    emoji = input("Emoji: ")
+    gen_and_save(emoji)
