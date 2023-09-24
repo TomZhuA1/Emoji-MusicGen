@@ -5,25 +5,47 @@ Created on Sat Sep 16 23:52:25 2023
 @author: zhouz
 """
 
-from audiocraft.models import musicgen
-import torchaudio
 import openai
 
-model = musicgen.MusicGen.get_pretrained('small', device='cpu')
-model.set_generation_params(duration=10)
+def get_musicgen():
+    '''
+    Run this function only once.
+    This will take about 2-3min.
+    '''
+    from audiocraft.models import musicgen
+    
+    model = musicgen.MusicGen.get_pretrained('small', device='cpu')
+    model.set_generation_params(duration=10)
+    
+    return model
 
-openai.api_key = "?"
+def get_completion(prompt):
+    '''
+    Ask Tom for the API key or you can use your own OpenAI API key.
+    Use GPT to genrate sentences with a given prompt
 
-def get_completion(prompt, model="gpt-3.5-turbo"):
+    Parameters
+        ----------
+        prompt : str
+    '''
+    openai.api_key = "?"
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
-        model=model,
+        model="gpt-3.5-turbo",
         messages=messages,
         temperature=0,
     )
     return response.choices[0].message["content"]
 
 def get_emotion_from_emoji(emoji):
+  '''
+    Use GPT to genrate emotion with a given emoji
+
+    Parameters
+        ----------
+        emoji : str(emoji)
+  '''
+
   prompt = f"""
   Task:
   '''
@@ -48,6 +70,14 @@ def get_emotion_from_emoji(emoji):
   return emotion
 
 def get_genre_from_emotion(emotion):
+  '''
+    Use GPT to genrate a music genre with a given emotion
+
+    Parameters
+        ----------
+        emotion : str
+  '''
+    
   prompt = f"""
   Task:
   '''
@@ -73,6 +103,14 @@ def get_genre_from_emotion(emotion):
   return subgenre
 
 def get_prompt(emoji):
+  '''
+    Use GPT to genrate a prompt for music generation with a given emoji
+
+    Parameters
+        ----------
+        emoji : str(emoji)
+  '''
+    
   emotion = get_emotion_from_emoji(emoji)
   subgenre = get_genre_from_emotion(emotion)
 
@@ -148,6 +186,11 @@ def get_prompt(emoji):
   return (subgenre, emotion, response)
 
 def gen_and_save(emoji):
+    '''
+    Use music Gen to generate a piece of music from a given emoji
+    '''
+    import torchaudio
+    
     subgenre, emotion, prompt = get_prompt(emoji)
     res = model.generate([f"""Genre: {subgenre}, {prompt} Emotion: {emotion}"""], progress=True)
     samplerate = 32000
