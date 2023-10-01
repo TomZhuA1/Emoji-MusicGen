@@ -48,6 +48,13 @@ def get_emotion_from_emoji(emoji):
 
     Sentence: A piece of music that feels like...
 
+    Emoji: 😇
+    Sentence: A piece of music that transports the listener to a celestial realm, where ethereal melodies dance on a bed of shimmering notes. It evokes a sense of serenity and tranquility, like a gentle breeze caressing the soul. The harmonies soar with angelic grace, enveloping the heart in a warm embrace, leaving behind a trail of pure bliss and heavenly euphoria.
+    
+    Emoji: 😍
+    Sentence: A piece of music that feels like a passionate love affair, where every note is a tender caress and every melody is a whispered declaration of adoration. It ignites a fire within the listener's heart, filling them with a euphoric longing and a deep sense of connection. The harmonies intertwine like lovers' bodies, creating a symphony of desire that leaves the soul enraptured and yearning for more.
+
+    Emoji {emoji}
     Sentence:
     """
 
@@ -66,6 +73,9 @@ def get_genre_from_emotion(emotion):
     3. Imagine 5 different music lovers are answering this question. All music lovers will write down 1 answer, then share it with the group. The group of music lover will then vote which answer is the best one.
     4. The final output should be the answer with the highest vote.
 
+    Emotion: A piece of music that feels like a passionate love affair, where every note is a tender caress and every melody is a whispered declaration of adoration. It ignites a fire within the listener's heart, filling them with a euphoric longing and a deep sense of connection. The harmonies intertwine like lovers' bodies, creating a symphony of desire that leaves the soul enraptured and yearning for more.
+    Subgenre: Neo-Soul
+    
     Emotion:{emotion}
     Subgenre:
     """
@@ -105,7 +115,6 @@ def get_prompt(emoji):
 
     response = get_completion(prompt)
     return (subgenre, emotion, response)
-
 def gen_and_save(emoji):
     '''
     Use music Gen to generate a piece of music from a given emoji
