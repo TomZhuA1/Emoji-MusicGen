@@ -23,11 +23,8 @@ def get_completion(prompt):
     '''
     Ask Tom for the API key or you can use your own OpenAI API key.
     Use GPT to genrate sentences with a given prompt
-
-    Parameters
-        ----------
-        prompt : str
     '''
+    
     openai.api_key = "?"
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
@@ -39,19 +36,15 @@ def get_completion(prompt):
 
 def get_emotion_from_emoji(emoji):
     prompt = f"""
-    Task:
-    '''
-    You are a poet.
-    Provide an emotional, figurative, and metaphorical sentence to describe the emotion of a piece of {emoji} music.
-    '''
+    Task: Provide an emotional, figurative, and metaphorical sentence to describe the emotion of {emoji} in the context of music composition.
 
     Requirements:
-    '''
-    1. Do not mention the emoji itself in the sentence.
-    2. Around 50 words.
+    1. Around 50 words.
+    2. Do not mention the emoji itself in the sentence.
     3. Focus on the emotion of {emoji} and imagine some figurative situation when people can feel this emotion.
-    4. Be creative and accurate with adjectives and use as many different ones as you can.
-    '''
+    4. Think it step by step.
+    5. Imagine 5 different poets are answering this question. All poets will write down 1 step of thinking and then share it with the group at each step. The group of poets will then vote whose thinking steso is the best one and will go with that step into the next step.
+    6. The final output should be the answer with the highest vote.
 
     Sentence: A piece of music that feels like...
 
@@ -59,106 +52,54 @@ def get_emotion_from_emoji(emoji):
     """
 
     emotion = get_completion(prompt)
-
     return emotion
+
 
 def get_genre_from_emotion(emotion):
     prompt = f"""
-    Task:
-    '''
-    You are a professional musician and know a lot about music genres.
-    Provide 1 music subgenre that best match the given emotion.
-    '''
+    Task: Provide 1 music subgenre that best matches the given emotion.
 
     Requirements:
-    '''
-    1. Do not make up music subgenres that do not exist.
-    2. Only print the name of the subgenre in your response.
-    3. Be creative the what subgenre to choose.
-    '''
+    1. Your response only contains the name of the music subgenre.
+    2. Your response should be a subgenre instead of a main genre.
+    2. Be artistic and creative with what subgenre to choose.
+    3. Imagine 5 different music lovers are answering this question. All music lovers will write down 1 answer, then share it with the group. The group of music lover will then vote which answer is the best one.
+    4. The final output should be the answer with the highest vote.
 
-    Emotion:
-    '''
-    {emotion}
-    '''
-
+    Emotion:{emotion}
     Subgenre:
     """
 
     subgenre = get_completion(prompt)
     return subgenre
 
+
 def get_prompt(emoji):
     emotion = get_emotion_from_emoji(emoji)
     subgenre = get_genre_from_emotion(emotion)
 
     prompt = f"""
-    Task:
-    '''
-    You are a professional composer and know a lot about music genres and emotion in music.
-    Write 1 response with professional music terms to describe a piece of music that best matches the given genre and emotion.
-    '''
+    Task: Write 1 response with professional music terms to describe a piece of music that best matches the given genre and emotion.
 
     Requirements:
-    '''
-    1. Only include 6 parameters in your response. [Instrumentation: , Timbre: , Chord: , Melody: , Drumbeat: , Tempo:]
-    2. Use around 5 professional music theory terms (do not use full sentenses) to describe each of the paremeters, including
-    tempo, drumbeats, chords, instruments, and timber so that it aligns with the emotion.
-    4. Around 30 words.
-    5. Only print the foramtted prompt in your response and nothing else.
-    '''
+    1. Around 50 words
+    2. Only include 5 parameters in your response. [Instrument: , Timbre: , Chord: , Drumbeat: , Tempo:]
+    3. Use 5 professional music theory, music composition, and music production terms in each of the parameters in your response.
+    4. Format the response in this template: Instrument: , Timbre: , Chord: , Drumbeat: , Tempo:
+    5. Think it step by step.
+    6. Imagine 5 different professional musicians, composers, and music producers are answering this question. All people will write down 1 step of thinking and then share it with the group at each step. The group of poets will then vote whose thinking steso is the best one and will go with that step into the next step.
+    7. The final output should be the answer with the highest vote.
 
-    Formalize the response in this template:
-    '''
-    Chords: , Instrument: , Timbre: , Melody: , Drumbeat: , Tempo:
-    '''
+    Genre: Jazz-Fusion
+    Emotion: A piece of music that unleashes a tempest of electrifying sensations, like a thunderstorm of sonic brilliance, where the harmonies crash and collide with a mind-bending force, leaving you in a state of awe and bewilderment. It's a kaleidoscope of euphoria and chaos, a symphony that shatters the boundaries of your imagination.
+    Prompt: Instrument: Electric guitar, bass, drums, and brass section, Timbre: Rich and vibrant, Chords: Groovy and funky, Drumbeat: Lively and syncopated, Tempo: 100 to 120.
 
-    Genre:
-    '''
-    {"Funk-rock"}
-    '''
+    Genre: Ambient-Chillout
+    Emotion: A piece of music that transports the listener to a celestial realm, where ethereal melodies dance on a bed of shimmering notes. It evokes a sense of serenity and tranquility, like a gentle breeze caressing the soul. The harmonies soar with angelic grace, enveloping the heart in a warm embrace, leaving behind a trail of pure bliss and heavenly euphoria.
+    Prompt: Instrument: Synthesizers, pads, and atmospheric sounds. Timbre: Ethereal and dreamy. Chords: Simple and spacious, Drumbeat: Subtle and minimal, with soft and gentle rhythms. Tempo: around 60 to 80.
 
-    Emotion:
-    '''
-    {"A piece of music that unleashes a tempest of electrifying sensations, like a thunderstorm of sonic brilliance, where the harmonies crash and collide with a mind-bending force, leaving you in a state of awe and bewilderment. It's a kaleidoscope of euphoria and chaos, a symphony that shatters the boundaries of your imagination."}
-    '''
-
-    Prompt: Chords: Groovy and funky. Instrument: Electric guitar, bass, drums, and brass section, Timbre: Rich and vibrant, Melody: Energetic and catchy riffs that will make you want to dance like a wild cowboy. Drumbeat: Lively and syncopated. Tempo: 100 to 120.
-
-    Genre:
-    '''
-    {'Jazz-Funk'}
-    '''
-
-    Emotion:
-    '''
-    {"A piece of music that dances with mischievous delight, its notes playfully teasing and taunting the listener's senses. It weaves a web of sly intrigue, its melodies whispering secrets and its rhythms winking with a knowing smirk. This music is a coy charmer, seducing with its cleverness and leaving a trail of playful mischief in its wake."}
-    '''
-
-    Prompt: Chords: Complex and colorful. Instrument: Electric piano, bass, drums, and brass section. Timbre: Warm and soulful. Melody: Smooth and sultry, with intricate improvisations. Drumbeat: Funky and syncopated, with emphasis on the off-beats. Tempo: Moderate, around 90 to 110.
-
-    Genre:
-    '''
-    {'Ambient-Chillout'}
-    '''
-
-    Emotion:
-    '''
-    {"A piece of music that transports the listener to a celestial realm, where ethereal melodies dance on a bed of shimmering notes. It evokes a sense of serenity and tranquility, like a gentle breeze caressing the soul. The harmonies soar with angelic grace, enveloping the heart in a warm embrace, leaving behind a trail of pure bliss and heavenly euphoria."}
-    '''
-
-    Prompt: Chords: Simple and spacious. Instrument: Synthesizers, pads, and atmospheric sounds. Timbre: Ethereal and dreamy. Melody: Minimalistic and repetitive, with long sustained notes. Drumbeat: Subtle and minimal, with soft and gentle rhythms. Tempo: Slow and relaxed, around 60 to 80.
-
-    Genre:
-    '''
-    {subgenre}
-    '''
-
-    Emotion:
-    '''
-    {emotion}
-    '''
-
+    Genre: {subgenre}
+    Emotion: {emotion}
     Prompt:
     """
 
